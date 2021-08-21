@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { CardList } from './components/card-list/card-list.component';
+import { SearchBox } from './components/search-box/search-box.component';
 //import logo from './logo.svg';
 import './App.css';
 
@@ -19,17 +20,22 @@ class App extends Component {
     .then(users => this.setState({ monsters: users }));
   }
 
+  handleChange = e => {
+    this.setState({ searchFiled: e.target.value });
+  }; //arrow f-n bind any references inside to the context of the component so we do not need class' bind method
+
   render() {
+    const { monsters, searchFiled } = this.state;
+    const filteredMonsters = monsters.filter(monster =>
+      monster.name.toLowerCase().includes(searchFiled.toLowerCase())
+      )
     return (
       <div className="App">
-        <input 
-          type='search' 
+        <SearchBox  
           placeholder='search monsters' 
-          onChange={e => 
-            this.setState({searchFiled: e.target.value})            
-          }
+          handleChange={this.handleChange}
         />
-        <CardList monsters={this.state.monsters} />        
+        <CardList monsters={filteredMonsters} />        
              
       </div>
     );
